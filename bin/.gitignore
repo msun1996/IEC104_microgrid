@@ -1,3 +1,7 @@
-/cause.properties
+/jdbc/
+/c3p0-config.xml
+/model/
+/dao/
 /iec104/
-/typeId.properties
+/remote_control
+/remote_control.json

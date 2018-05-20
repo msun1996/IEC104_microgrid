@@ -9,5 +9,7 @@
 	<classpathentry kind="lib" path="Reference_jar/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="Reference_jar/ezmorph-1.0.6.jar"/>
 	<classpathentry kind="lib" path="Reference_jar/json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="lib" path="Reference_jar/c3p0-0.9.5.2.jar"/>
+	<classpathentry kind="lib" path="Reference_jar/mysql-connector-java-5.1.39-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

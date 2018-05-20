@@ -8,8 +8,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-/* @Description 加载property配置文件 */
+/* @Description */
 public class FileUtils {
+	/* 加载property配置文件 */
     public static Properties loadPropFile(String filePath) throws Exception{
         InputStream is = FileUtils.class.getClassLoader().getResourceAsStream(filePath);
         InputStreamReader isr = new InputStreamReader(is, "GBK");
@@ -24,7 +25,7 @@ public class FileUtils {
         }
         return properties;
     }
-
+    /* 加载json配置文件 */
     public static JSONObject loadJsonFile(String filePath) throws Exception{
         InputStream is = FileUtils.class.getClassLoader().getResourceAsStream(filePath);
         BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));

@@ -5,16 +5,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
+import dao.DevControlDao;
 import iec104.IeShortFloat;
-
 import iec104.IeSinglePointWithQuality;
-
-import net.sf.json.JSONObject;
 
 import iec104.util.ChangeUtils;
 

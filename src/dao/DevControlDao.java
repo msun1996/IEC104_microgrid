@@ -1,0 +1,66 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import jdbc.C3P0Utils;
+import model.DevControl;
+
+public class DevControlDao {
+	// 添加设备 输入参数为设备编号和设备的类型号码
+	public void addDev(String num , Integer dev_type) throws SQLException {
+		Connection conn = C3P0Utils.getConnection();
+		String sql = "" + 
+		"insert into microgrids_devcontrol " +
+		"(num,dev_type)" +
+		"values(?,?)";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setString(1, num);
+		ptmt.setInt(2, dev_type);
+		ptmt.execute();
+	}
+	// 删除设备 输入设备编号
+	public void delDev(String num) throws SQLException {
+		Connection conn = C3P0Utils.getConnection();
+		String sql = "" + 
+		" delete from microgrids_devcontrol" + 
+		" where num = ?";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setString(1, num);
+		ptmt.execute();
+	}
+	// 查询返回设备是否存在
+	public Boolean exit(String num) throws SQLException {
+		Connection conn = C3P0Utils.getConnection();
+		String sql = " " +
+		"select num from microgrids_devcontrol" + 
+		"where num = ?";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setString(1, num);
+		ResultSet rs = ptmt.executeQuery();
+		if (rs.next()) {
+			return true;
+		}else {
+			return false; 
+		}	
+	}
+	// 查询所有存在设备编号,返回编号集合
+	public List<String> query() throws SQLException {
+		List<String> dev_nums = new ArrayList<String>();
+		
+		Connection conn = C3P0Utils.getConnection();
+		String sql = "" +
+		"select num from microgrids_devcontrol";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ResultSet rs = ptmt.executeQuery();
+		while (rs.next()) {
+			String dev_num = rs.getString("num");
+			dev_nums.add(dev_num);
+		}
+		return dev_nums;
+	} 
+}
