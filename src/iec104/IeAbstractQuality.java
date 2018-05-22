@@ -16,19 +16,19 @@ abstract class IeAbstractQuality extends InformationElement {
     }
 
     public int isBlocked() {
-        return (value >> 4) | 0x01;
+        return (value >> 4) & 0x01;
     }
 
     public int isSubstituted() {
-        return (value >> 5) | 0x01;
+        return (value >> 5) & 0x01;
     }
 
     public int isNotTopical() {
-        return (value >> 6) | 0x01;
+        return (value >> 6) & 0x01;
     }
 
     public int isInvalid() {
-        return (value >> 7) | 0x01;
+        return (value >> 7) & 0x01;
     }
 
     @Override

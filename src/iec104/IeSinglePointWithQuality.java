@@ -11,7 +11,7 @@ public class IeSinglePointWithQuality extends IeAbstractQuality {
     }
 
     public int isOn() {
-        return (value >> 0) | 0x01;
+        return (value >> 0) & 0x01;
     }
 
     @Override

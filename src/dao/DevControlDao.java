@@ -22,6 +22,20 @@ public class DevControlDao {
 		ptmt.setString(1, num);
 		ptmt.setInt(2, dev_type);
 		ptmt.execute();
+		conn.close();
+	}
+	// 更新设备类型号码
+	public void updateDev(String num , Integer dev_type) throws SQLException {
+		Connection conn = C3P0Utils.getConnection();
+		String sql = "" + 
+		" update microgrids_devcontrol" +
+		" set dev_type=? " +
+		" where num=? ";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setInt(1, dev_type);
+		ptmt.setString(2, num);
+		ptmt.execute();
+		conn.close();
 	}
 	// 删除设备 输入设备编号
 	public void delDev(String num) throws SQLException {
@@ -32,6 +46,7 @@ public class DevControlDao {
 		PreparedStatement ptmt = conn.prepareStatement(sql);
 		ptmt.setString(1, num);
 		ptmt.execute();
+		conn.close();
 	}
 	// 查询返回设备是否存在
 	public Boolean exit(String num) throws SQLException {
@@ -43,8 +58,10 @@ public class DevControlDao {
 		ptmt.setString(1, num);
 		ResultSet rs = ptmt.executeQuery();
 		if (rs.next()) {
+			conn.close();
 			return true;
 		}else {
+			conn.close();
 			return false; 
 		}	
 	}
@@ -61,6 +78,7 @@ public class DevControlDao {
 			String dev_num = rs.getString("num");
 			dev_nums.add(dev_num);
 		}
+		conn.close();
 		return dev_nums;
 	} 
 }

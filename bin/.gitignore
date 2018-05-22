@@ -1,7 +1,3 @@
-/jdbc/
-/c3p0-config.xml
-/model/
-/dao/
 /iec104/
-/remote_control
+/dao/
 /remote_control.json
