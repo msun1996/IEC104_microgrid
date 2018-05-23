@@ -31,6 +31,21 @@ public class InformationObject {
         			informationElements[i][1] = new IeQuality(is);
         		}
         		break;
+        	// 45 单点遥控返回确认数据读取
+        	case 45:
+        		informationElements = new InformationElement[numberOfSequenceElements][1];
+        		for (int i = 0; i < numberOfSequenceElements; i++) {
+        			informationElements[i][0] = new IeSinglePointWithQuality(is);
+        		}
+        		break;
+        	// 49标度化值返回确认数据获取
+        	case 49:
+        		informationElements = new InformationElement[numberOfSequenceElements][2];
+        		for (int i = 0; i < numberOfSequenceElements; i++) {
+        			informationElements[i][0] = new IeScaled(is);
+        			informationElements[i][1] = new IeQuality(is);
+        		}
+        		break;
         	// 100 总召
         	case 100:
         		informationElements = new InformationElement[][] { { new IeQualifierOfInterrogation(is) } };

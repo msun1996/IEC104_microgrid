@@ -5,10 +5,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import dao.DevControlDao;
 import iec104.IeShortFloat;
 import iec104.IeSinglePointWithQuality;
 
@@ -16,7 +20,13 @@ import iec104.util.ChangeUtils;
 
 
 public class Client {
+	// 定义的是本地远程命令发送帧的接收和发送序号
+	public static int receiveSeqNum = 0; //接收序号
+	public static int sendSeqNum = 0; // 发送序号，每发送一个后需+1
 	public static void main(String[] args) {
+		// 记录存储遥控、遥调实时值
+		Map<String, Integer> remoteControlValues = new HashMap<String,Integer>();
+		Map<String, Double> remoteAdjustVlaues = new HashMap<String,Double>();
 		try {
             //系统初始化
             Init.start();
@@ -30,7 +40,16 @@ public class Client {
             Runnable runnable = new Runnable() {
                 public void run() {
                     try {
-                        os.write(ChangeUtils.hexStringToBytes("680E0000000064010600010000000014"));
+                        byte[] recNum = new byte[2];
+                        recNum[0] = (byte) (receiveSeqNum << 1);
+                        recNum[1] = (byte) (receiveSeqNum >> 7);
+                        String recStr = ChangeUtils.toHexString(recNum);
+                        byte[] sendNum = new byte[2];
+                        sendNum[0] = (byte) (sendSeqNum << 1);
+                        sendNum[1] = (byte) (sendSeqNum >> 7);
+                        sendSeqNum += 1;
+                        String sendStr = ChangeUtils.toHexString(sendNum);
+                        os.write(ChangeUtils.hexStringToBytes("680E"+sendStr+recStr+"64010600010000000014"));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -38,7 +57,146 @@ public class Client {
             };
             ScheduledExecutorService service_A = Executors.newSingleThreadScheduledExecutor();
             // 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
-            service_A.scheduleAtFixedRate(runnable, 0, 100, TimeUnit.HOURS);
+            service_A.scheduleAtFixedRate(runnable, 2, 60, TimeUnit.SECONDS);
+            
+        	// 设备信息定时获取存入设备类，并进行处理发送（遥测、遥信数据）
+            Runnable runnable_db_send = new Runnable() {
+    			@Override
+    			public void run() {
+    				try {
+    					// 遥控信息(单点遥控)
+    					Iterator address_control = Init.remoteControl.keys();
+    					while (address_control.hasNext()) {
+							String address = address_control.next().toString();
+							String num = Init.remoteControl.getJSONObject(address).getString("num");
+							String field = Init.remoteControl.getJSONObject(address).getString("field");
+							DevControlDao devDao = new DevControlDao();
+							if (!num.equals("") && !field.equals("")) {
+								Integer value = devDao.getint(num, field);
+								if(remoteControlValues.containsKey(address) && value == remoteControlValues.get(address)) {
+									//System.out.println("状态不变");
+								} else {
+									remoteControlValues.put(address, value);
+									// 起始位
+									String start = "68";
+									// 长度
+									Integer len = 14;
+									byte[] lenNum = new byte[1];
+									lenNum[0] = (byte) (len >> 0);
+									String lenStr = ChangeUtils.toHexString(lenNum);
+			                        // 发送序号
+			                        byte[] sendNum = new byte[2];
+			                        sendNum[0] = (byte) (sendSeqNum << 1);
+			                        sendNum[1] = (byte) (sendSeqNum >> 7);
+			                        sendSeqNum += 1;
+			                        String sendStr = ChangeUtils.toHexString(sendNum);
+									// 接收序号
+			                        byte[] recNum = new byte[2];
+			                        recNum[0] = (byte) (receiveSeqNum << 1);
+			                        recNum[1] = (byte) (receiveSeqNum >> 7);
+			                        String recStr = ChangeUtils.toHexString(recNum);
+			                        // 类型标识
+			                        String typeIdStr = "2d";
+			                        // 可变结构限定词
+			                        String vsqStr = "01";
+			                        // 传输原因
+			                        String causeOfTransmissionStr = "0600";
+			                        // 公共地址
+			                        String commAddressStr = "0100";
+			                        // 信息体地址
+			                        Integer addr = Integer.parseInt(address);
+			                        byte[] addrNum = new byte[3];
+			                        addrNum[0] = (byte) (addr >> 0) ;
+			                        addrNum[1] = (byte) (addr >> 8);
+			                        addrNum[2] = (byte) (addr >> 16);
+			                        String addrStr = ChangeUtils.toHexString(addrNum);
+			                        // 信息值
+			                        byte[] valueNum = new byte[1];
+			                        valueNum[0] = (byte) (value >> 0);
+			                        String valuestr = ChangeUtils.toHexString(valueNum);
+			                        os.write(ChangeUtils.hexStringToBytes(start+lenStr+sendStr+recStr+
+			                        		typeIdStr+vsqStr+causeOfTransmissionStr+commAddressStr+
+			                        		addrStr+valuestr));
+			                        System.out.println(start+lenStr+sendStr+recStr+
+			                        		typeIdStr+vsqStr+causeOfTransmissionStr+commAddressStr+
+			                        		addrStr+valuestr);
+			                        Thread.sleep(200);
+								}
+							}
+						}
+    					// 遥调 (定值、标度化值)
+    					Iterator address_ajust = Init.remoteAdjust.keys();
+    					while (address_ajust.hasNext()) {
+							String address = address_ajust.next().toString();
+							String num = Init.remoteAdjust.getJSONObject(address).getString("num");
+							String field = Init.remoteAdjust.getJSONObject(address).getString("field");
+							DevControlDao devDao = new DevControlDao();
+							if (!num.equals("") && !field.equals("")) {
+								Double value = devDao.getdouble(num, field);
+								
+								if(remoteAdjustVlaues.containsKey(address) && Math.abs(value-remoteAdjustVlaues.get(address))<0.01) {
+									//System.out.println("状态不变");
+								} else {
+									remoteAdjustVlaues.put(address, value);
+									System.out.println(value+ " " + remoteAdjustVlaues.get(address));
+									// 起始位
+									String start = "68";
+									// 长度
+									Integer len = 16;
+									byte[] lenNum = new byte[1];
+									lenNum[0] = (byte) (len >> 0);
+									String lenStr = ChangeUtils.toHexString(lenNum);
+			                        // 发送序号
+			                        byte[] sendNum = new byte[2];
+			                        sendNum[0] = (byte) (sendSeqNum << 1);
+			                        sendNum[1] = (byte) (sendSeqNum >> 7);
+			                        sendSeqNum += 1;
+			                        String sendStr = ChangeUtils.toHexString(sendNum);
+									// 接收序号
+			                        byte[] recNum = new byte[2];
+			                        recNum[0] = (byte) (receiveSeqNum << 1);
+			                        recNum[1] = (byte) (receiveSeqNum >> 7);
+			                        String recStr = ChangeUtils.toHexString(recNum);
+			                        // 类型标识
+			                        String typeIdStr = "31";
+			                        // 可变结构限定词
+			                        String vsqStr = "01";
+			                        // 传输原因
+			                        String causeOfTransmissionStr = "0600";
+			                        // 公共地址
+			                        String commAddressStr = "0100";
+			                        // 信息体地址
+			                        Integer addr = Integer.parseInt(address);
+			                        byte[] addrNum = new byte[3];
+			                        addrNum[0] = (byte) (addr >> 0) ;
+			                        addrNum[1] = (byte) (addr >> 8);
+			                        addrNum[2] = (byte) (addr >> 16);
+			                        String addrStr = ChangeUtils.toHexString(addrNum);
+			                        // 信息值2位
+			                        byte[] valueNum = new byte[2];
+			                        valueNum[0] = (byte) (value.intValue() >> 0);
+			                        valueNum[1] = (byte) (value.intValue() >> 8);
+			                        String valuestr = ChangeUtils.toHexString(valueNum);
+			                        // 品质因素1位 
+			                        String QDSStr = "00";
+			                        os.write(ChangeUtils.hexStringToBytes(start+lenStr+sendStr+recStr+
+			                        		typeIdStr+vsqStr+causeOfTransmissionStr+commAddressStr+
+			                        		addrStr+valuestr+QDSStr));
+			                        System.out.println(start+lenStr+sendStr+recStr+
+			                        		typeIdStr+vsqStr+causeOfTransmissionStr+commAddressStr+
+			                        		addrStr+valuestr);
+			                        Thread.sleep(200);
+								}
+							}
+						}
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    			}
+    		}; 
+            ScheduledExecutorService service_send = Executors.newScheduledThreadPool(1);
+            // 第二个参数为首次执行的延时时间，第三个参数为结束和下次开始执行的间隔时间
+            service_send.scheduleWithFixedDelay(runnable_db_send, 3, 1, TimeUnit.SECONDS);
             
 			// 由Socket对象得到输入流，构造相应的BufferedReader对象
 			InputStream is = socket.getInputStream();
@@ -50,7 +208,7 @@ public class Client {
                         //  处理I命令
                         handleData(asdu.getTypeId(),asdu.getInformationObjects());
                         //  返回S确认命令
-                        int receiveSeqNum = apdu.getSendSeqNumber() + 1;
+                        receiveSeqNum = apdu.getSendSeqNumber() + 1;    
                         byte[] recNum = new byte[2];
                         recNum[0] = (byte) (receiveSeqNum << 1);
                         recNum[1] = (byte) (receiveSeqNum >> 7);
@@ -73,7 +231,6 @@ public class Client {
                 	System.out.println("异常错误,"+ e);
                     break;
                 }
-                
 			}
 			os.close(); // 关闭Socket输出流
 			is.close(); // 关闭Socket输入流

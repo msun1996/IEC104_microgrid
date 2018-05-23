@@ -1,0 +1,14 @@
+{
+	"24577":{"field":"switch_status","num":"BS101011","descript":"1#断路器","注解":""},
+	"24578":{"field":"switch_status","num":"BS101021","descript":"2#断路器","注解":""},
+	"24579":{"field":"switch_status","num":"HS1011","descript":"高压负荷开关","注解":""},
+	"24580":{"field":"switch_status","num":"PVI0101","descript":"西科逆变器1_开关机命令","注解":""},
+	"24581":{"field":"switch_status","num":"PVI0102","descript":"西科逆变器2_开关机命令","注解":""},
+	"24582":{"field":"","num":"","descript":"","注解":""},
+	"24583":{"field":"","num":"","descript":"","注解":""},
+	"24584":{"field":"","num":"","descript":"","注解":""},
+	"24585":{"field":"","num":"","descript":"","注解":""},
+	"24586":{"field":"","num":"","descript":"","注解":""},
+	"24587":{"field":"","num":"","descript":"","注解":""},
+	"24588":{"field":"","num":"","descript":"","注解":""}
+}

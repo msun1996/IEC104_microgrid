@@ -16,6 +16,7 @@ import iec104.util.FileUtils;
 import model.PVAnalogQuantityData1;
 import model.PVAnalogQuantityData2;
 import model.PVDigitalQuantityData;
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
 public class Init {
@@ -25,6 +26,9 @@ public class Init {
     public static JSONObject devsinfo = null;
     public static JSONObject remoteSignal = null;
     public static JSONObject remoteMeasure = null;
+    public static JSONObject remoteControl = null;
+    public static JSONObject remoteAdjust = null;
+    
 	// 创建数据库数据对象集合
     public static List<PVDigitalQuantityData> PVD = new ArrayList<PVDigitalQuantityData>();
 	public static List<PVAnalogQuantityData1> PVA1 = new ArrayList<PVAnalogQuantityData1>();
@@ -44,9 +48,11 @@ public class Init {
             causeProp = FileUtils.loadPropFile("cause.properties");
             // 设备信息
             devsinfo = FileUtils.loadJsonFile("dev.json");
-            // 遥信、遥测
+            // 遥信、遥测、遥控、遥调
             remoteSignal = FileUtils.loadJsonFile("remote_signal.json");
             remoteMeasure = FileUtils.loadJsonFile("remote_measure.json");
+            remoteControl = FileUtils.loadJsonFile("remote_control.json");
+            remoteAdjust = FileUtils.loadJsonFile("remote_adjust.json");
             
         } catch (Exception e) {
             e.printStackTrace();

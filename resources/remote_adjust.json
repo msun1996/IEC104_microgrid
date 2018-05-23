@@ -1,0 +1,14 @@
+{
+	"25089":{"field":"active_power","num":"PVI0101","descript":"西科逆变器1_有功功率遥调值","注解":""},
+	"25090":{"field":"reactive_power","num":"PVI0101","descript":"西科逆变器1_无功功率遥调值","注解":""},
+	"25091":{"field":"active_power","num":"PVI0102","descript":"西科逆变器2_有功功率遥调值","注解":""},
+	"25092":{"field":"reactive_power","num":"PVI0102","descript":"西科逆变器2_无功功率遥调值","注解":""},
+	"25093":{"field":"","num":"","descript":"","注解":""},
+	"25094":{"field":"","num":"","descript":"","注解":""},
+	"25095":{"field":"","num":"","descript":"","注解":""},
+	"25096":{"field":"","num":"","descript":"","注解":""},
+	"25097":{"field":"powerfactor","num":"PVI0101","descript":"西科逆变器1_功率因数遥调值","注解":""},
+	"25098":{"field":"powerfactor","num":"PVI0102","descript":"西科逆变器2_功率因数遥调值","注解":""},
+	"25099":{"field":"","num":"","descript":"","注解":""},
+	"25100":{"field":"","num":"","descript":"","注解":""}
+}
