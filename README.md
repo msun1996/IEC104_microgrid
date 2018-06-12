@@ -47,14 +47,22 @@ IEC104数据库与Web管理系统共用一个数据库，IEC104需建立的数�
 model每个类文件会对应数据库操作dao库中一个类文件，dao的类中会记录数据库操作所需要执行的增删改查操作。目录结构如图：
 ![数据库设备操作类](https://github.com/msun1996/IEC104_microgrid/blob/master/projectInstruction/picture/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E5%A4%87%E6%93%8D%E4%BD%9C%E7%B1%BB.png)  
 以DevControlDao实现类为例简要说明:  
-添加设备实现函数核心sql操作语句
-```Strning sql = "insert into microgrids_devcontrol (num, dev_type) values(?,?)";```
+添加设备实现函数核心sql操作语句  
+```
+Strning sql = "insert into microgrids_devcontrol (num, dev_type) values(?,?)";
+```
 更新设备类型号码实现函数核心sql操作语句  
-```Strning sql = "update microgrids_devcontrol set dev_type=? where num=?";```
+```
+Strning sql = "update microgrids_devcontrol set dev_type=? where num=?";
+```
 删除设备类实现函数核心sql操作语句  
-```String sql="delete from microgrid_devcontrol where num=?"```
-查询设备是否存在函数的核心sql操作语句
-```String sql="select num from microgrid_devcontrol where num=?"```
+```
+String sql="delete from microgrid_devcontrol where num=?"
+```
+查询设备是否存在函数的核心sql操作语句  
+```
+String sql="select num from microgrid_devcontrol where num=?"
+```
 ### 3 IEC104数据库连接初始化
 数据库为考虑大量数据写入时的性能要求，使用了C3P0数据库连接池的方法来增强数据库操作的性能。其中C3P0连接池初始化获得mysql操作对象的类为jdbc包的C3P0Utils类  
 ```
