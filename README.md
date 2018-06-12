@@ -134,4 +134,4 @@ IEC104主站发送相关遥控、遥调命令，并打印信息，如图
 PMA从站会接收到IEC104主站的遥控、遥调信息，如图  
 ![PMA从站遥控、遥调信息接收图](https://github.com/msun1996/IEC104_microgrid/blob/master/projectInstruction/picture/PMA%E4%BB%8E%E7%AB%99%E9%81%A5%E6%8E%A7%E3%80%81%E9%81%A5%E8%B0%83%E4%BF%A1%E6%81%AF%E6%8E%A5%E6%94%B6%E5%9B%BE.png)  
 
-#### 程序参考学习自 [huarda / IEC104-1](https://github.com/huarda/IEC104-1)
+#### 程序参考学习修改自 [huarda / IEC104-1](https://github.com/huarda/IEC104-1)
