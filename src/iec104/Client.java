@@ -77,6 +77,7 @@ public class Client {
 									//System.out.println("状态不变");
 								} else {
 									remoteControlValues.put(address, value);
+									System.out.println("信息体地址：" + address + "信息体值："+ value);
 									// 起始位
 									String start = "68";
 									// 长度
@@ -117,7 +118,7 @@ public class Client {
 			                        os.write(ChangeUtils.hexStringToBytes(start+lenStr+sendStr+recStr+
 			                        		typeIdStr+vsqStr+causeOfTransmissionStr+commAddressStr+
 			                        		addrStr+valuestr));
-			                        System.out.println(start+lenStr+sendStr+recStr+
+			                        System.out.println("发送遥控命令帧："+ start+lenStr+sendStr+recStr+
 			                        		typeIdStr+vsqStr+causeOfTransmissionStr+commAddressStr+
 			                        		addrStr+valuestr);
 			                        Thread.sleep(200);
@@ -138,7 +139,7 @@ public class Client {
 									//System.out.println("状态不变");
 								} else {
 									remoteAdjustVlaues.put(address, value);
-									System.out.println(value+ " " + remoteAdjustVlaues.get(address));
+									System.out.println("信息体地址：" + address + "信息体值："+ value);
 									// 起始位
 									String start = "68";
 									// 长度
@@ -182,7 +183,7 @@ public class Client {
 			                        os.write(ChangeUtils.hexStringToBytes(start+lenStr+sendStr+recStr+
 			                        		typeIdStr+vsqStr+causeOfTransmissionStr+commAddressStr+
 			                        		addrStr+valuestr+QDSStr));
-			                        System.out.println(start+lenStr+sendStr+recStr+
+			                        System.out.println("发送遥调命令帧："+ start+lenStr+sendStr+recStr+
 			                        		typeIdStr+vsqStr+causeOfTransmissionStr+commAddressStr+
 			                        		addrStr+valuestr);
 			                        Thread.sleep(200);
