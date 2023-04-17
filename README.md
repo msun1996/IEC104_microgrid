@@ -12,7 +12,7 @@ IEC104有3种帧格式，分别为U帧即控制报文帧、S帧即监视帧和I�
 ![U帧格式](https://github.com/msun1996/IEC104_microgrid/blob/master/projectInstruction/picture/U%E5%B8%A7%E6%A0%BC%E5%BC%8F.png)  
 2)S帧：只包含APCI部分。S帧格式如图
 ![S帧格式](https://github.com/msun1996/IEC104_microgrid/blob/master/projectInstruction/picture/S%E5%B8%A7%E6%A0%BC%E5%BC%8F.png)  
-3)I帧：包含APCI+APDU部分。I帧格式如图
+3)I帧：包含APCI+ASDU部分。I帧格式如图
 ![I帧格式](https://github.com/msun1996/IEC104_microgrid/blob/master/projectInstruction/picture/I%E5%B8%A7%E6%A0%BC%E5%BC%8F.png)  
 发送序号和接收序列号是保证数据完整性的条件。  
 类型标识定义发送数据的格式。  
